@@ -1,14 +1,101 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/light_gray" >
 
     <TextView
+        android:id="@+id/thank_you"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:autoLink="web"
+        android:text="Many thanks to: http://twitter4j.org/"
+        android:textStyle="bold" />
+
+    <ViewAnimator
+        android:id="@+id/view_animator"
+        android:layout_above="@id/thank_you"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <TextView
+                android:id="@+id/welcome_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/hello"
+                android:textStyle="bold"
+                tools:context=".MainActivity" />
+
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/welcome_text"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button_tweet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tweet" />
+
+                <Button
+                    android:id="@+id/button_followers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Followers" />
+
+                <Button
+                    android:id="@+id/button_following"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Following" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/buttons"
+                android:background="@android:color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <TextView
+                android:id="@+id/compose_tweet_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="What a great app!"
+                android:textStyle="bold"
+                tools:context=".MainActivity" />
+
+            <Button
+                android:id="@+id/button_compose_tweet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Post tweet" />
+
+            <EditText
+                android:id="@+id/compose_tweet_field"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/button_compose_tweet"
+                android:gravity="top|left"
+                android:hint="Compose tweet..." />
+        </RelativeLayout>
+    </ViewAnimator>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import twitter4j.Twitter;
+import twitter4j.User;
 import twitter4j.auth.RequestToken;
 import android.app.Activity;
 import android.net.Uri;
@@ -26,7 +27,16 @@ public class Twitter4jModel {
 		this.authorizationCallbacks = new HashMap<Activity, ICallback>();
 	}
 
-	public void getFriends(final Activity activity, final IResultCallback<List<String>> callback) {
+	public void getFollowers(final Activity activity, final IResultCallback<List<User>> callback) {
+		authorize(activity, new ICallback() {
+			@Override
+			public void perform() {
+
+			}
+		});
+	}
+
+	public void getFollowing(final Activity activity, final IResultCallback<List<User>> callback) {
 		authorize(activity, new ICallback() {
 			@Override
 			public void perform() {
