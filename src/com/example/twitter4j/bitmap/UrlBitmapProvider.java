@@ -10,6 +10,7 @@ import java.net.URL;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class UrlBitmapProvider implements IBitmapProvider {
@@ -17,34 +18,46 @@ public class UrlBitmapProvider implements IBitmapProvider {
 	private static final int IO_BUFFER_SIZE = 4 * 1024;
 
 	@Override
-	public void getBitmap(String url, IBitmapCallback callback) {
-		Bitmap bitmap = null;
-		InputStream in = null;
-		BufferedOutputStream out = null;
+	public void getBitmap(final String url, final IBitmapCallback callback) {
 
-		try {
-			in = new BufferedInputStream(new URL(url).openStream(), IO_BUFFER_SIZE);
+		AsyncTask<Void, Void, Bitmap> task = new AsyncTask<Void, Void, Bitmap>() {
+			@Override
+			protected Bitmap doInBackground(Void... params) {
+				Bitmap bitmap = null;
+				InputStream in = null;
+				BufferedOutputStream out = null;
 
-			final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-			out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
-			copy(in, out);
-			out.flush();
+				try {
+					in = new BufferedInputStream(new URL(url).openStream(), IO_BUFFER_SIZE);
 
-			final byte[] data = dataStream.toByteArray();
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			// options.inSampleSize = 1;
+					final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+					out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
+					copy(in, out);
+					out.flush();
 
-			bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-		} catch (IOException e) {
-			Log.e("Bitmap", "Could not load Bitmap from: " + url);
-		} finally {
-			closeStream(in);
-			closeStream(out);
-		}
+					final byte[] data = dataStream.toByteArray();
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					// options.inSampleSize = 1;
 
-		if (bitmap != null) {
-			callback.bitmapFound(bitmap);
-		}
+					bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+				} catch (IOException e) {
+					Log.e("Bitmap", "Could not load Bitmap from: " + url);
+				} finally {
+					closeStream(in);
+					closeStream(out);
+				}
+
+				return bitmap;
+			}
+
+			@Override
+			protected void onPostExecute(Bitmap result) {
+				if (result != null) {
+					callback.bitmapFound(result);
+				}
+			}
+		};
+		task.execute();
 	}
 
 	private static void copy(InputStream inputStream, BufferedOutputStream out) throws IOException {
