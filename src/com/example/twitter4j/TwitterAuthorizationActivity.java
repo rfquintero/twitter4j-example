@@ -5,37 +5,54 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 public class TwitterAuthorizationActivity extends Activity {
 
-	private static final String CALLBACK_SCHEME = "oauth-twitter4j";
-	private static final String CALLBACK_URL = CALLBACK_SCHEME + "://callback";
+	protected static final String REQUEST_TOKEN = "request_token";
 	private RequestToken requestToken;
 	private Twitter4jModel model;
+	private WebView webView;
+	private FrameLayout webViewFrame;
 
 	@Override
 	protected final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		model = Twitter4jModelFactory.getInstance(this);
-		model.requestTokenWithCallbackUrl(this, CALLBACK_URL);
-	}
+		requestToken = (RequestToken) getIntent().getSerializableExtra(REQUEST_TOKEN);
 
-	public void launchAuthorizationRequest(RequestToken requestToken) {
-		this.requestToken = requestToken;
-		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthorizationURL()))
-				.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY
-						| Intent.FLAG_FROM_BACKGROUND);
-		this.startActivity(intent);
+		CookieSyncManager.getInstance().sync();
+		webViewFrame = new FrameLayout(this);
+		webViewFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		webView = new WebView(this);
+		webView.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		webViewFrame.addView(webView);
+
+		webView.loadUrl(requestToken.getAuthorizationURL());
+
+		setContentView(webViewFrame);
 	}
 
 	@Override
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Uri uri = intent.getData();
-		if (uri != null && uri.getScheme().equals(CALLBACK_SCHEME)) {
+		if (uri != null && uri.getScheme().equals(Twitter4jModel.CALLBACK_SCHEME)) {
 			model.setOAuthTokenFromCallbackUri(uri, requestToken);
 			finish();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		webViewFrame.removeAllViews();
+		webView.destroy();
 	}
 
 	// @Override
