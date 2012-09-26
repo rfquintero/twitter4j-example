@@ -16,6 +16,8 @@ import com.example.twitter4j.data.TwitterAccessToken;
 
 public class Twitter4jModel {
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
+	private static final String CONSUMER_KEY = "";
+	private static final String CONSUMER_SECRET = "";
 
 	private final ITwitter4jStorage storage;
 	private final Twitter twitter;
@@ -25,6 +27,7 @@ public class Twitter4jModel {
 		this.storage = storage;
 		this.twitter = twitter;
 		this.authorizationCallbacks = new HashMap<Activity, ICallback>();
+		this.twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 	}
 
 	public void getFollowers(final Activity activity, final IResultCallback<List<User>> callback) {
