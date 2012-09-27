@@ -23,8 +23,8 @@ public class Twitter4jModel {
 	public static final String CALLBACK_URL = CALLBACK_SCHEME + "://callback";
 
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
-	private static final String CONSUMER_KEY = "E3Jnl6TmZrUfG0xYAfX6w";
-	private static final String CONSUMER_SECRET = "vUd0KYM9imEPVE3UJgTIbQIhQZ78T98rg44OdfDdE";
+	private static final String CONSUMER_KEY = "";
+	private static final String CONSUMER_SECRET = "";
 
 	private final ITwitter4jStorage storage;
 	private final Twitter twitter;
