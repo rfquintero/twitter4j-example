@@ -25,6 +25,7 @@
             android:name=".Twitter4jAuthorizationActivity"
             android:launchMode="singleTask"
             android:exported="false"
+            android:noHistory="true"
              >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
