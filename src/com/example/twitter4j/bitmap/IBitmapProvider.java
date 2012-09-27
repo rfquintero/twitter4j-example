@@ -7,6 +7,6 @@ public interface IBitmapProvider {
 	public void getBitmap(String id, IBitmapCallback callback);
 
 	public interface IBitmapCallback {
-		public void bitmapFound(Bitmap bitmap);
+		public void bitmapFound(String id, Bitmap bitmap);
 	}
 }

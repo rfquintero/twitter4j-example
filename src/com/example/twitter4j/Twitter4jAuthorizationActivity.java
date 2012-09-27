@@ -7,11 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
-public class TwitterAuthorizationActivity extends Activity {
+public class Twitter4jAuthorizationActivity extends Activity {
 
 	protected static final String REQUEST_TOKEN = "request_token";
 	private RequestToken requestToken;
@@ -26,6 +27,7 @@ public class TwitterAuthorizationActivity extends Activity {
 		requestToken = (RequestToken) getIntent().getSerializableExtra(REQUEST_TOKEN);
 
 		CookieSyncManager.getInstance().sync();
+		CookieManager.getInstance().removeAllCookie();
 		webViewFrame = new FrameLayout(this);
 		webViewFrame.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		webView = new WebView(this);
@@ -33,19 +35,27 @@ public class TwitterAuthorizationActivity extends Activity {
 		webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 		webViewFrame.addView(webView);
 
-		webView.loadUrl(requestToken.getAuthorizationURL());
-
 		setContentView(webViewFrame);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		webView.loadUrl(requestToken.getAuthorizationURL());
 	}
 
 	@Override
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Uri uri = intent.getData();
-		if (uri != null && uri.getScheme().equals(Twitter4jModel.CALLBACK_SCHEME)) {
+		if (isCallbackUri(uri)) {
 			model.setOAuthTokenFromCallbackUri(uri, requestToken);
 			finish();
 		}
+	}
+
+	private boolean isCallbackUri(Uri uri) {
+		return (uri != null && uri.getScheme().equals(Twitter4jModel.CALLBACK_SCHEME));
 	}
 
 	@Override
@@ -54,10 +64,4 @@ public class TwitterAuthorizationActivity extends Activity {
 		webViewFrame.removeAllViews();
 		webView.destroy();
 	}
-
-	// @Override
-	// protected void onRestart() {
-	// super.onRestart();
-	// finish();
-	// }
 }

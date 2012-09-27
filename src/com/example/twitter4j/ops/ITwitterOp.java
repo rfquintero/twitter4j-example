@@ -1,4 +1,4 @@
-package com.example.twitter4j;
+package com.example.twitter4j.ops;
 
 import twitter4j.TwitterException;
 

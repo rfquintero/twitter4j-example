@@ -53,7 +53,7 @@ public class UrlBitmapProvider implements IBitmapProvider {
 			@Override
 			protected void onPostExecute(Bitmap result) {
 				if (result != null) {
-					callback.bitmapFound(result);
+					callback.bitmapFound(url, result);
 				}
 			}
 		};

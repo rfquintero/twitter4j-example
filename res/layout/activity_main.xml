@@ -19,11 +19,13 @@
         android:id="@+id/view_animator"
         android:layout_above="@id/thank_you"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+         >
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            >
 
             <TextView
                 android:id="@+id/welcome_text"
@@ -57,7 +59,7 @@
                     android:id="@+id/button_following"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Following" />
+                    android:text="Friends" />
             </LinearLayout>
 
             <ListView
@@ -70,7 +72,8 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent" 
+            android:background="@color/light_gray">
 
             <TextView
                 android:id="@+id/compose_tweet_label"

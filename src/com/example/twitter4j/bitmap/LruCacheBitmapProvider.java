@@ -25,13 +25,13 @@ class LruCacheBitmapProvider implements IBitmapProvider {
 		if (bitmap == null) {
 			delegate.getBitmap(id, new IBitmapCallback() {
 				@Override
-				public void bitmapFound(Bitmap bitmap) {
+				public void bitmapFound(String id, Bitmap bitmap) {
 					cache.put(id, bitmap);
-					callback.bitmapFound(bitmap);
+					callback.bitmapFound(id, bitmap);
 				}
 			});
 		} else {
-			callback.bitmapFound(bitmap);
+			callback.bitmapFound(id, bitmap);
 		}
 	}
 }
