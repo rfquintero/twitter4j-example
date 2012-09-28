@@ -1,8 +1,6 @@
 package com.example.twitter4j;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import twitter4j.Twitter;
 import twitter4j.User;
@@ -26,12 +24,11 @@ public class Twitter4jModel {
 
 	private final ITwitter4jStorage storage;
 	private final Twitter twitter;
-	private final Set<IAuthCallback> authorizationCallbacks;
+	private IAuthCallback authorizationCallback;
 
 	public Twitter4jModel(ITwitter4jStorage storage, Twitter twitter) {
 		this.storage = storage;
 		this.twitter = twitter;
-		this.authorizationCallbacks = new HashSet<IAuthCallback>();
 		this.twitter.setOAuthConsumer(TwitterKeys.CONSUMER_KEY, TwitterKeys.CONSUMER_SECRET);
 	}
 
@@ -69,7 +66,7 @@ public class Twitter4jModel {
 			requestTokenWithCallbackUrl(new IResultCallback<RequestToken>() {
 				@Override
 				public void perform(RequestToken result) {
-					authorizationCallbacks.add(authCallback);
+					authorizationCallback = authCallback;
 					Intent intent = new Intent(activity, Twitter4jAuthorizationActivity.class);
 					intent.putExtra(Twitter4jAuthorizationActivity.REQUEST_TOKEN, result);
 					activity.startActivity(intent);
@@ -91,10 +88,9 @@ public class Twitter4jModel {
 					twitter.setOAuthAccessToken(result);
 					storage.saveTwitterAccessToken(result);
 
-					for (IAuthCallback authCallback : authorizationCallbacks) {
-						authCallback.perform(new TwitterOpHandler(authCallback));
+					if (authorizationCallback != null) {
+						authorizationCallback.perform(new TwitterOpHandler(authorizationCallback));
 					}
-					authorizationCallbacks.clear();
 				}
 			}, requestToken, oauthVerifier);
 		}
